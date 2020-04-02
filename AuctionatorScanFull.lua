@@ -189,6 +189,14 @@ function Atr_FullScanBeginAnalyzePhase()
 
   local numBatchAuctions, totalAuctions, returnedTotalAuction = Atr_GetNumAuctionItems("list");
 
+  AUCTIONATOR_SNAPSHOT = {}
+  AUCTIONATOR_SNAPSHOT["realm"] = GetRealmName()
+  AUCTIONATOR_SNAPSHOT["faction"] = UnitFactionGroup ("player")
+  AUCTIONATOR_SNAPSHOT["snapshot_by"] = UnitName("player")
+  AUCTIONATOR_SNAPSHOT["snapshot_at"] = GetServerTime();
+
+  AUCTIONATOR_SNAPSHOT["auctions"] = {}
+
   gGetAllTotalAuctions  = returnedTotalAuction
   gGetAllNumBatchAuctions = numBatchAuctions
 
@@ -245,7 +253,7 @@ function Atr_FullScanAnalyze()
 
       local name, texture, count, quality, canUse, level, huh, minBid,
         minIncrement, buyoutPrice, bidAmount, highBidder, bidderFullName,
-        owner, ownerFullName, saleStatus = GetAuctionItemInfo( "list", x )
+        owner, ownerFullName, saleStatus, itemId = GetAuctionItemInfo( "list", x )
 
       gNumScanned = gNumScanned + 1
 
@@ -265,6 +273,26 @@ function Atr_FullScanAnalyze()
         -- TODO fix to prevent error from unknown quality returned from GetAuctionItemInfo, above
         -- Should constantize (1 means white)
         gQualities[ name ] = quality or 1
+
+        local snapitem = {}
+        snapitem["n"] = name
+        snapitem["i"] = itemId
+        snapitem["q"] = count
+        snapitem["s"] = minBid
+        snapitem["b"] = buyoutPrice
+        snapitem["c"] = bidAmount
+
+        --a nil owner is caused by blizzard code, names are not resolved immediately until a guid>name database is returned
+        --the full name database can take over 30 seconds to update... thanks blizzard
+        --so if you login and do a quick full scan then logout, it is not uncommon to get blank names. uhg lol
+        --slow scan doesn't have this problem... but no one got time for that
+        if owner == nil then
+          --set to empty string so it's not undefined
+          snapitem["o"] = ""
+        else
+          snapitem["o"] = owner
+        end
+        table.insert(AUCTIONATOR_SNAPSHOT["auctions"],snapitem)
 
         if buyoutPrice ~= nil then
 
