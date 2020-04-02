@@ -30,7 +30,7 @@ AUCTIONATOR_DEFTAB      = 1;
 
 AUCTIONATOR_DB_MAXITEM_AGE  = 180;
 AUCTIONATOR_DB_MAXHIST_AGE  = 21;   -- obsolete - just needed for migration
-AUCTIONATOR_DB_MAXHIST_DAYS = 5;
+AUCTIONATOR_DB_MAXHIST_DAYS = 28;
 
 AUCTIONATOR_OPEN_FIRST    = 0;  -- obsolete - just needed for migration
 AUCTIONATOR_OPEN_BUY    = 0;  -- obsolete - just needed for migration
@@ -3601,17 +3601,20 @@ function Atr_ShowSearchSummary()
       local data = scn.absoluteBest;
 
       local lineEntry_item_tag = "AuctionatorEntry"..line.."_PerItem_Price";
-
+      local lineEntry_stack_tag = "AuctionatorEntry"..line.."_Stack_Price";
       local lineEntry_item    = _G[lineEntry_item_tag];
+      local lineEntry_stack    = _G[lineEntry_stack_tag];
+
       local lineEntry_itemtext  = _G["AuctionatorEntry"..line.."_PerItem_Text"];
       local lineEntry_text    = _G["AuctionatorEntry"..line.."_EntryText"];
-      local lineEntry_stack   = _G["AuctionatorEntry"..line.."_StackPrice"];
+      local lineEntry_stacktext   = _G["AuctionatorEntry"..line.."_Stack_Text"];
 
       lineEntry_itemtext:SetText  ("");
       lineEntry_text:SetText  ("");
-      lineEntry_stack:SetText ("");
+      lineEntry_stacktext:SetText ("");
+      lineEntry_stack:Hide();
 
-      lineEntry_text:GetParent():SetPoint ("LEFT", 157, 0);
+      --lineEntry_text:GetParent():SetPoint ("LEFT", 157, 0);
 
       Atr_SetMFcolor (lineEntry_item_tag);
 
@@ -3624,7 +3627,7 @@ function Atr_ShowSearchSummary()
       local b = scn.itemTextColor[3]
 
       lineEntry_text:SetTextColor (r, g, b)
-      lineEntry_stack:SetTextColor (1, 1, 1)
+      lineEntry_stacktext:SetTextColor (1, 1, 1)
 
       -- Auctionator.Util.Print( scn, "Atr_ShowSearchSummary Scan" )
       local icon = Atr_GetUCIcon( scn.itemLink )
@@ -3641,11 +3644,12 @@ function Atr_ShowSearchSummary()
         end
 
         lineEntry_text:SetText (icon.."  "..scn.itemName..iLevelStr)
-        lineEntry_stack:SetText (scn:GetNumAvailable().." "..ZT("available"))
+        lineEntry_stacktext:SetText (scn:GetNumAvailable().." "..ZT("available"))
       end
 
       if (data == nil or scn.sortedData == nil or #scn.sortedData == 0) then
         lineEntry_item:Hide();
+
         lineEntry_itemtext:Show();
         if (scn.sortedData and #scn.sortedData == 0) then
           lineEntry_itemtext:SetText (ZT("none available"));
@@ -3727,24 +3731,26 @@ function Atr_ShowCurrentAuctions()
       local data = scn.sortedData[dataOffset];
 
       local lineEntry_item_tag = "AuctionatorEntry"..line.."_PerItem_Price";
-
+      local lineEntry_stack_tag = "AuctionatorEntry"..line.."_Stack_Price";
       local lineEntry_item    = _G[lineEntry_item_tag];
+      local lineEntry_stack    = _G[lineEntry_stack_tag];
+
       local lineEntry_itemtext  = _G["AuctionatorEntry"..line.."_PerItem_Text"];
       local lineEntry_text    = _G["AuctionatorEntry"..line.."_EntryText"];
-      local lineEntry_stack   = _G["AuctionatorEntry"..line.."_StackPrice"];
+      local lineEntry_stacktext   = _G["AuctionatorEntry"..line.."_Stack_Text"];
 
       lineEntry_itemtext:SetText  ("");
       lineEntry_text:SetText  ("");
-      lineEntry_stack:SetText ("");
+      lineEntry_stacktext:SetText ("");
 
-      lineEntry_text:GetParent():SetPoint ("LEFT", 172, 0);
+      --lineEntry_text:GetParent():SetPoint ("LEFT", 172, 0);
 
       Atr_SetMFcolor (lineEntry_item_tag);
+      Atr_SetMFcolor (lineEntry_stack_tag);
 
       local entrytext = "";
 
       if (data.type == "n") then
-
         lineEntry:Show();
 
         if (data.count == 1) then
@@ -3769,16 +3775,21 @@ function Atr_ShowCurrentAuctions()
 
         if (data.buyoutPrice == 0) then
           lineEntry_item:Hide();
+          lineEntry_stack:Hide();
+
           lineEntry_itemtext:Show();
           lineEntry_itemtext:SetText (ZT("no buyout price"));
+          lineEntry_stacktext:SetText("")
         else
           lineEntry_item:Show();
-          lineEntry_itemtext:Hide();
-          MoneyFrame_Update (lineEntry_item_tag, zc.round(data.buyoutPrice/data.stackSize) );
+          --lineEntry_itemtext:Hide();
+          MoneyFrame_Update ( lineEntry_item_tag, zc.round(data.buyoutPrice/data.stackSize) );
 
           if (data.stackSize > 1) then
-            lineEntry_stack:SetText (zc.priceToString(data.buyoutPrice));
-            lineEntry_stack:SetTextColor (0.6, 0.6, 0.6);
+            lineEntry_stack:Show();
+            MoneyFrame_Update (lineEntry_stack_tag, data.buyoutPrice );
+          else
+            lineEntry_stack:Hide();
           end
         end
 
@@ -3865,18 +3876,21 @@ function Atr_ShowHistory (showPosts)
       local data = gCurrentPane.sortedHist[dataOffset];
 
       local lineEntry_item_tag = "AuctionatorEntry"..line.."_PerItem_Price";
-
+      local lineEntry_stack_tag = "AuctionatorEntry"..line.."_Stack_Price";
       local lineEntry_item    = _G[lineEntry_item_tag];
+      local lineEntry_stack    = _G[lineEntry_stack_tag];
+
       local lineEntry_itemtext  = _G["AuctionatorEntry"..line.."_PerItem_Text"];
       local lineEntry_text    = _G["AuctionatorEntry"..line.."_EntryText"];
-      local lineEntry_stack   = _G["AuctionatorEntry"..line.."_StackPrice"];
+      local lineEntry_stacktext   = _G["AuctionatorEntry"..line.."_Stack_Text"];
 
-      lineEntry_text:GetParent():SetPoint ("LEFT", 172, 0);
+      --lineEntry_text:GetParent():SetPoint ("LEFT", 172, 0);
 
       lineEntry_item:Show();
       lineEntry_itemtext:Hide();
 
-      lineEntry_stack:SetText ("");
+      lineEntry_stacktext:SetText ("");
+      lineEntry_stack:Hide();
 
       Atr_SetMFcolor (lineEntry_item_tag);
 
@@ -4469,7 +4483,7 @@ end
 
 function Atr_Duration_Initialize(self)
   Auctionator.Debug.Message( 'Atr_Duration_Initialize', self )
-	
+
 	-- DaMaGepy fix
   --Atr_Dropdown_AddPick (self, AUCTION_DURATION_ONE, 1, Atr_Duration_OnClick);
   Atr_Dropdown_AddPick (self, "2 Hours", 1, Atr_Duration_OnClick);
