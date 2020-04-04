@@ -535,9 +535,10 @@ local pet_links = {}
 
 function Atr_ShowTipWithPricing (tip, num)
   local iname, ilink = tip:GetItem()
+  local showSomething = AUCTIONATOR_A_TIPS == 1 or AUCTIONATOR_V_TIPS == 1 or AUCTIONATOR_D_TIPS == 1
 
   --sometimes the item is blank
-  if ilink and not isIsBlank(ilink) then
+  if ilink and not isIsBlank(ilink) and showSomething then
     local itemName, itemLink, itemRarity, _, itemMinLevel, itemType, _, _, _, _, itemVendorPrice, classID = GetItemInfo (ilink);
     local itemLevel = ItemUpgradeInfo:GetUpgradedItemLevel( itemLink )
     local xstring = ""
@@ -558,7 +559,7 @@ function Atr_ShowTipWithPricing (tip, num)
 
     local vendorPrice, auctionPrice, dePrice = Atr_STWP_GetPrices (itemLink, num, itemVendorPrice, itemName, classID, itemRarity, itemLevel);
 
-    -- spacer
+    -- spacing
     tip:AddLine(" ")
 
     -- vendor info
