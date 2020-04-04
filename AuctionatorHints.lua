@@ -589,33 +589,38 @@ end
 
 --add regents and prices to tooltip
 function Atr_ShowReagentTooltip(tip, craftType, index, reagent)
-  tip:AddLine(" ")
-  tip:AddLine("|cff69CCF0Reagents:")
+  local showSomething = AUCTIONATOR_A_TIPS == 1 or AUCTIONATOR_V_TIPS == 1 or AUCTIONATOR_D_TIPS == 1
 
-  if craftType == "craft" then
-    --loop through craft reagents
-    local nr = GetCraftNumReagents(index);
-    for i = 1,nr  do
-      --get the reagent info
-      local rname, _, rreq = GetCraftReagentInfo(index,i)
-      local rlink = GetCraftReagentItemLink(index,i)
-      ReagentLine(tip,rlink,rname,rreq)
-      tip:AddLine(" ")
-    end
-  elseif craftType == "trade" then
-    --the items reagents
-    local nr = GetTradeSkillNumReagents(index)
-    for i=1,nr do
-      local rlink = GetTradeSkillReagentItemLink(index,i)
-      local rname, _, rreq = GetTradeSkillReagentInfo(index,i)
+  if showSomething then
+    tip:AddLine(" ")
+    tip:AddLine("|cff69CCF0Reagents:")
 
-      ReagentLine(tip,rlink,rname,rreq)
-      tip:AddLine(" ")
+
+    if craftType == "craft" then
+      --loop through craft reagents
+      local nr = GetCraftNumReagents(index);
+      for i = 1,nr  do
+        --get the reagent info
+        local rname, _, rreq = GetCraftReagentInfo(index,i)
+        local rlink = GetCraftReagentItemLink(index,i)
+        ReagentLine(tip,rlink,rname,rreq)
+        tip:AddLine(" ")
+      end
+    elseif craftType == "trade" then
+      --the items reagents
+      local nr = GetTradeSkillNumReagents(index)
+      for i=1,nr do
+        local rlink = GetTradeSkillReagentItemLink(index,i)
+        local rname, _, rreq = GetTradeSkillReagentInfo(index,i)
+
+        ReagentLine(tip,rlink,rname,rreq)
+        tip:AddLine(" ")
+      end
     end
+
+    --finalize tooltip
+    tip:Show()
   end
-
-  --finalize tooltip
-  tip:Show()
 end
 
 function ReagentLine(tip,rlink,rname,rreq)
