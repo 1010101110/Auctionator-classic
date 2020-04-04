@@ -157,12 +157,10 @@ hooksecurefunc (GameTooltip, "SetInventoryItem",
 
 hooksecurefunc (GameTooltip, "SetInboxItem",
   function (tip, index, attachIndex)
-    if AUCTIONATOR_SHOW_MAILBOX_TIPS == 1 then
-      local attachmentIndex = attachIndex or 1
-      local _, _, _, num = GetInboxItem(index, attachmentIndex);
-      if num then
-        Atr_ShowTipWithPricing (tip, num);
-      end
+    local attachmentIndex = attachIndex or 1
+    local _, _, _, num = GetInboxItem(index, attachmentIndex);
+    if num then
+      Atr_ShowTipWithPricing (tip, num);
     end
   end
 );

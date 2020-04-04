@@ -171,7 +171,7 @@ function Atr_SetupTooltipsOptionsFrame ()
   ATR_tipsVendorOpt_CB:SetChecked   (zc.NumToBool(AUCTIONATOR_V_TIPS));
   ATR_tipsAuctionOpt_CB:SetChecked  (zc.NumToBool(AUCTIONATOR_A_TIPS));
   ATR_tipsDisenchantOpt_CB:SetChecked (zc.NumToBool(AUCTIONATOR_D_TIPS));
-  ATR_tipsMailboxOpt_CB:SetChecked( zc.NumToBool( AUCTIONATOR_SHOW_MAILBOX_TIPS ))
+  --ATR_tipsMailboxOpt_CB:SetChecked( zc.NumToBool( AUCTIONATOR_SHOW_MAILBOX_TIPS ))
 end
 
 
@@ -189,7 +189,7 @@ function Atr_TooltipsOptionsFrame_Save( frame )
   AUCTIONATOR_V_TIPS    = zc.BoolToNum(ATR_tipsVendorOpt_CB:GetChecked ());
   AUCTIONATOR_A_TIPS    = zc.BoolToNum(ATR_tipsAuctionOpt_CB:GetChecked ());
   AUCTIONATOR_D_TIPS    = zc.BoolToNum(ATR_tipsDisenchantOpt_CB:GetChecked ());
-  AUCTIONATOR_SHOW_MAILBOX_TIPS = zc.BoolToNum( ATR_tipsMailboxOpt_CB:GetChecked() )
+  --AUCTIONATOR_SHOW_MAILBOX_TIPS = zc.BoolToNum( ATR_tipsMailboxOpt_CB:GetChecked() )
 
   AUCTIONATOR_SHIFT_TIPS    = UIDropDownMenu_GetSelectedValue(Atr_tipsShiftDD);
   AUCTIONATOR_DE_DETAILS_TIPS = UIDropDownMenu_GetSelectedValue(Atr_deDetailsDD);
