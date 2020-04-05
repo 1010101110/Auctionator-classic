@@ -451,7 +451,9 @@ end
 
 function Atr_STWP_AddVendorInfo (tip, xstring, vendorPrice, auctionPrice)
   if (AUCTIONATOR_V_TIPS == 1 and vendorPrice > 0) then
-    tip:AddDoubleLine (ZT("Vendor")..xstring, "|cFFFFFFFF"..zc.priceToMoneyString (vendorPrice))
+    local left = ZT("Vendor")..xstring
+    local right = "|cFFFFFFFF"..zc.priceToMoneyString (vendorPrice)
+    Atr_Tooltip_AddLine(tip,ZT("Vendor"),left,right)
   end
 end
 
@@ -465,32 +467,39 @@ function Atr_STWP_AddAuctionInfo (tip, xstring, link, auctionPrice)
 
     local bondtype = Atr_GetBondType (itemID);
 
+    local left = ZT("Auction")..xstring
+    local right = "|cFFFFFFFF"
+
     if (bondtype == ATR_BIND_ON_PICKUP) then
-      tip:AddDoubleLine (ZT("Auction")..xstring, "|cFFFFFFFF"..ZT("BOP").."  ");
+      right = right .. ZT("BOP").."  "
     elseif (bondtype == ATR_BINDS_TO_ACCOUNT) then
-      tip:AddDoubleLine (ZT("Auction")..xstring, "|cFFFFFFFF"..ZT("BOA").."  ");
+      right = right .. ZT("BOA").."  "
     elseif (bondtype == ATR_QUEST_ITEM) then
-      tip:AddDoubleLine (ZT("Auction")..xstring, "|cFFFFFFFF"..ZT("Quest Item").."  ");
+      right = right .. ZT("Quest Item").."  "
     elseif (auctionPrice ~= nil) then
-      tip:AddDoubleLine (ZT("Auction")..xstring, "|cFFFFFFFF"..zc.priceToMoneyString (auctionPrice));
+      right = right .. zc.priceToMoneyString (auctionPrice)
     else
-      tip:AddDoubleLine (ZT("Auction")..xstring, "|cFFFFFFFF"..ZT("unknown").."  ");
+      right = right .. ZT("unknown").."  "
     end
+
+    Atr_Tooltip_AddLine(tip,ZT("Auction"),left,right)
   end
 end
 
 -----------------------------------------
 
 function Atr_STWP_AddBasicDEInfo (tip, xstring, dePrice)
-
   if (AUCTIONATOR_D_TIPS == 1 and dePrice ~= nil) then
+    local left = ZT("Disenchant")..xstring
+    local right = "|cFFFFFFFF"
     if (dePrice > 0) then
-      tip:AddDoubleLine (ZT("Disenchant")..xstring, "|cFFFFFFFF"..zc.priceToMoneyString(dePrice));
+      right = right .. zc.priceToMoneyString(dePrice)
     else
-      tip:AddDoubleLine (ZT("Disenchant")..xstring, "|cFFFFFFFF"..ZT("unknown").."  ");
+      right = right .. ZT("unknown").."  "
     end
-  end
 
+    Atr_Tooltip_AddLine(tip,ZT("Disenchant"),left,right)
+  end
 end
 
 -----------------------------------------
@@ -557,8 +566,10 @@ function Atr_ShowTipWithPricing (tip, num)
 
     local vendorPrice, auctionPrice, dePrice = Atr_STWP_GetPrices (itemLink, num, itemVendorPrice, itemName, classID, itemRarity, itemLevel);
 
-    -- spacing
-    tip:AddLine(" ")
+    -- spacing for first render (num is nil)
+    if not num then
+      tip:AddLine(" ")
+    end
 
     -- vendor info
     Atr_STWP_AddVendorInfo (tip, xstring, vendorPrice, auctionPrice)
@@ -585,7 +596,7 @@ function Atr_ShowTipWithPricing (tip, num)
   end
 end
 
---add regents and prices to tooltip
+-- add regents and prices to tooltip
 function Atr_ShowReagentTooltip(tip, craftType, index, reagent)
   local showSomething = AUCTIONATOR_A_TIPS == 1 or AUCTIONATOR_V_TIPS == 1 or AUCTIONATOR_D_TIPS == 1
 
@@ -621,6 +632,7 @@ function Atr_ShowReagentTooltip(tip, craftType, index, reagent)
   end
 end
 
+-- add the individual reagent prices
 function ReagentLine(tip,rlink,rname,rreq)
   local xstring = ""
   if rreq then
@@ -644,6 +656,32 @@ end
 --test to see if item link is "[]" which is valid item link but a blank item
 function isIsBlank(itemString)
   return strmatch(itemString, "%[%]") and true or false
+end
+
+-- find if line with heading already exists
+-- if it does replace it with new text
+-- if not then add a new line
+function Atr_Tooltip_AddLine(tip,lefttext,new_leftext,new_righttext)
+  local name = tip:GetName()
+  local numlines = tip:NumLines()
+  local found = false
+
+  for i = 1, numlines do
+    -- Get a reference to the aligned text on this line:
+    local left = _G[name .. "TextLeft" .. i]
+    local right = _G[name .. "TextRight" .. i]
+
+    -- check if this is the line we are looking for
+    if left:GetText() == lefttext then
+      found = true
+      left:SetText(new_leftext)
+      right:SetText(new_righttext)
+    end
+  end
+
+  if not found then
+    tip:AddDoubleLine(new_leftext,new_righttext)
+  end
 end
 
 --loops through tooltip lines to get the text and color
