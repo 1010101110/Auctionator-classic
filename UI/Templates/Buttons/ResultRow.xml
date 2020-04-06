@@ -3,8 +3,8 @@
     <Size><AbsDimension x="584" y="16" /></Size>
     <Frames>
       <Frame>
-        <Size><AbsDimension x="240" y="16" /></Size>
-        <Anchors><Anchor point="LEFT"><Offset><AbsDimension x="220" y="0"/></Offset></Anchor></Anchors>
+        <Size><AbsDimension x="140" y="16" /></Size>
+        <Anchors><Anchor point="LEFT"><Offset><AbsDimension x="22" y="0"/></Offset></Anchor></Anchors>
         <Layers>
           <Layer level="BACKGROUND">
             <FontString name="$parent_PerItem_Text" inherits="GameFontDarkGraySmall" justifyH="RIGHT">
@@ -27,7 +27,7 @@
 
       <Frame>
         <Size><AbsDimension x="220" y="16" /></Size>
-        <Anchors><Anchor point="LEFT"><Offset><AbsDimension x="10" y="0"/></Offset></Anchor></Anchors>
+        <Anchors><Anchor point="LEFT"><Offset><AbsDimension x="167" y="0"/></Offset></Anchor></Anchors>
         <Layers>
           <Layer level="BACKGROUND">
             <FontString name="$parent_EntryText" inherits="GameFontHighlightSmall" justifyH="LEFT"/>
@@ -37,7 +37,7 @@
 
       <Frame>
         <Size><AbsDimension x="120" y="16" /></Size>
-        <Anchors><Anchor point="LEFT"><Offset><AbsDimension x="460" y="0"/></Offset></Anchor></Anchors>
+        <Anchors><Anchor point="LEFT"><Offset><AbsDimension x="440" y="0"/></Offset></Anchor></Anchors>
         <Layers>
           <Layer level="BACKGROUND">
             <FontString name="$parent_Stack_Text" inherits="GameFontHighlightSmall" justifyH="RIGHT"/>
