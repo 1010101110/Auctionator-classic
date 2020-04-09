@@ -449,17 +449,17 @@ end
 
 -----------------------------------------
 
-function Atr_STWP_AddVendorInfo (tip, xstring, vendorPrice, auctionPrice)
+function Atr_STWP_AddVendorInfo (tip, xstring, vendorPrice, doreplace)
   if (AUCTIONATOR_V_TIPS == 1 and vendorPrice > 0) then
     local left = ZT("Vendor")..xstring
     local right = "|cFFFFFFFF"..zc.priceToMoneyString (vendorPrice)
-    Atr_Tooltip_AddLine(tip,ZT("Vendor"),left,right)
+    Atr_Tooltip_AddLine(tip,ZT("Vendor"),left,right, doreplace)
   end
 end
 
 -----------------------------------------
 
-function Atr_STWP_AddAuctionInfo (tip, xstring, link, auctionPrice)
+function Atr_STWP_AddAuctionInfo (tip, xstring, link, auctionPrice, doreplace)
   if AUCTIONATOR_A_TIPS == 1 then
 
     local itemID = zc.RawItemIDfromLink (link);
@@ -482,13 +482,13 @@ function Atr_STWP_AddAuctionInfo (tip, xstring, link, auctionPrice)
       right = right .. ZT("unknown").."  "
     end
 
-    Atr_Tooltip_AddLine(tip,ZT("Auction"),left,right)
+    Atr_Tooltip_AddLine(tip,ZT("Auction"),left,right, doreplace)
   end
 end
 
 -----------------------------------------
 
-function Atr_STWP_AddBasicDEInfo (tip, xstring, dePrice)
+function Atr_STWP_AddBasicDEInfo (tip, xstring, dePrice, doreplace)
   if (AUCTIONATOR_D_TIPS == 1 and dePrice ~= nil) then
     local left = ZT("Disenchant")..xstring
     local right = "|cFFFFFFFF"
@@ -498,7 +498,7 @@ function Atr_STWP_AddBasicDEInfo (tip, xstring, dePrice)
       right = right .. ZT("unknown").."  "
     end
 
-    Atr_Tooltip_AddLine(tip,ZT("Disenchant"),left,right)
+    Atr_Tooltip_AddLine(tip,ZT("Disenchant"),left,right, doreplace)
   end
 end
 
@@ -572,13 +572,13 @@ function Atr_ShowTipWithPricing (tip, num)
     end
 
     -- vendor info
-    Atr_STWP_AddVendorInfo (tip, xstring, vendorPrice, auctionPrice)
+    Atr_STWP_AddVendorInfo (tip, xstring, vendorPrice, true)
 
     -- auction info
-    Atr_STWP_AddAuctionInfo (tip, xstring, itemLink, auctionPrice)
+    Atr_STWP_AddAuctionInfo (tip, xstring, itemLink, auctionPrice, true)
 
     -- disenchanting info
-    Atr_STWP_AddBasicDEInfo (tip, xstring, dePrice)
+    Atr_STWP_AddBasicDEInfo (tip, xstring, dePrice, true)
 
     local showDetails = true;
 
@@ -646,11 +646,11 @@ function ReagentLine(tip,rlink,rname,rreq)
   local vendorPrice, auctionPrice, dePrice = itemPrices(rlink)
 
   -- vendor info
-  Atr_STWP_AddVendorInfo (tip, "", vendorPrice, auctionPrice)
+  Atr_STWP_AddVendorInfo (tip, "", vendorPrice, auctionPrice, false)
   -- auction info
-  Atr_STWP_AddAuctionInfo (tip, "", rlink, auctionPrice)
+  Atr_STWP_AddAuctionInfo (tip, "", rlink, auctionPrice, false)
   -- disenchanting info
-  Atr_STWP_AddBasicDEInfo (tip, "", dePrice)
+  Atr_STWP_AddBasicDEInfo (tip, "", dePrice, false)
 end
 
 --test to see if item link is "[]" which is valid item link but a blank item
@@ -661,21 +661,23 @@ end
 -- find if line with heading already exists
 -- if it does replace it with new text
 -- if not then add a new line
-function Atr_Tooltip_AddLine(tip,lefttext,new_leftext,new_righttext)
+function Atr_Tooltip_AddLine(tip,lefttext,new_leftext,new_righttext,doreplace)
   local name = tip:GetName()
   local numlines = tip:NumLines()
   local found = false
 
-  for i = 1, numlines do
-    -- Get a reference to the aligned text on this line:
-    local left = _G[name .. "TextLeft" .. i]
-    local right = _G[name .. "TextRight" .. i]
+  if doreplace then
+    for i = 1, numlines do
+      -- Get a reference to the aligned text on this line:
+      local left = _G[name .. "TextLeft" .. i]
+      local right = _G[name .. "TextRight" .. i]
 
-    -- check if this is the line we are looking for
-    if left:GetText() == lefttext then
-      found = true
-      left:SetText(new_leftext)
-      right:SetText(new_righttext)
+      -- check if this is the line we are looking for
+      if left:GetText() == lefttext then
+        found = true
+        left:SetText(new_leftext)
+        right:SetText(new_righttext)
+      end
     end
   end
 
