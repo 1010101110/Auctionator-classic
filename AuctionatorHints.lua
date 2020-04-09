@@ -60,14 +60,14 @@ end
 -----------------------------------------
 --These tooltips don't SetItem so we have to handle them differently
 
---craft spells don't have an item but we can get their reagents
+-- the craft spell in craft window
 hooksecurefunc( GameTooltip, 'SetCraftSpell',
   function( tip, craftspellindex )
     Atr_ShowReagentTooltip(tip, "craft",craftspellindex)
   end
 );
 
--- --the reagents once a trade skill is selected in trade window
+-- reagents once a trade skill is selected in trade window
 hooksecurefunc (GameTooltip, "SetTradeSkillItem",
   function (tip, skill, id)
     --we are on the tradeskill, not reagents
@@ -77,7 +77,7 @@ hooksecurefunc (GameTooltip, "SetTradeSkillItem",
   end
 );
 
---the reagents once a craft skill is selected in craft window
+-- the individual reagents once a craft spell is selected in craft window
 hooksecurefunc( GameTooltip, 'SetCraftItem',
   function( tip, craftspellindex, reagentindex )
     --this blizzard api doesn't set item correctly so we have to do it manually
@@ -529,11 +529,13 @@ function Atr_STWP_GetPrices (link, num, itemVendorPrice, itemName, classID, item
 end
 
 --get item prices without all the params
-function itemPrices(link)
+function itemPrices(link, num)
   local itemName, itemLink, itemRarity, _, itemMinLevel, itemType, _, _, _, _, itemVendorPrice, classID = GetItemInfo (link);
   local itemLevel = ItemUpgradeInfo:GetUpgradedItemLevel( itemLink )
 
-  return Atr_STWP_GetPrices (link, 1, itemVendorPrice, itemName, classID, itemRarity, itemLevel);
+  if not num then num = 1 end
+
+  return Atr_STWP_GetPrices (link, num, itemVendorPrice, itemName, classID, itemRarity, itemLevel);
 end
 
 -----------------------------------------
@@ -643,7 +645,7 @@ function ReagentLine(tip,rlink,rname,rreq)
   end
 
   -- get prices
-  local vendorPrice, auctionPrice, dePrice = itemPrices(rlink)
+  local vendorPrice, auctionPrice, dePrice = itemPrices(rlink,rreq)
 
   -- vendor info
   Atr_STWP_AddVendorInfo (tip, "", vendorPrice, auctionPrice, false)
