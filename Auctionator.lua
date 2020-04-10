@@ -18,6 +18,7 @@ gAtrZC = addonTable.zc;   -- share with AuctionatorDev
 local recommendElements     = {};
 
 AUCTIONATOR_ENABLE_ALT    = 1;
+AUCTIONATOR_AUTOCOMPLETE = 1;
 AUCTIONATOR_SHOW_ST_PRICE = 0;
 AUCTIONATOR_SHOW_TIPS   = 1;
 AUCTIONATOR_DEF_DURATION  = "N";    -- none
@@ -5044,6 +5045,8 @@ end
 
 function Atr_Item_Autocomplete(self)
   Auctionator.Debug.Message( 'Atr_Item_Autocomplete', self )
+
+  if AUCTIONATOR_AUTOCOMPLETE == 0 then return end
 
   local text = self:GetText();
   local textlen = strlen(text);
