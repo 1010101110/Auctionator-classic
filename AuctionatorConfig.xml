@@ -407,6 +407,19 @@
         </Scripts>
       </Frame>
 
+      <Frame inherits="Atr_SingleOptionTemplate" name="ATR_tipsReagentOpt">
+        <Anchors>
+          <Anchor point="TOPLEFT">
+            <Offset>
+              <AbsDimension x="20" y="-310"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <Scripts>
+          <OnLoad>ATR_tipsReagentOpt_CB_Text:SetText (gAtr_ZT("Show reagent prices in tradeskill tooltips"));  </OnLoad>
+        </Scripts>
+      </Frame>
+
 <!--
       <Frame inherits="Atr_SingleOptionTemplate" name="ATR_tipsMailboxOpt">
         <Anchors>

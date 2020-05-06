@@ -698,7 +698,7 @@ end
 function Atr_ShowReagentTooltip(tip, craftType, index, reagent)
   local showSomething = AUCTIONATOR_A_TIPS == 1 or AUCTIONATOR_V_TIPS == 1 or AUCTIONATOR_D_TIPS == 1
 
-  if showSomething then
+  if showSomething and AUCTIONATOR_R_TIPS == 1 then
     tip:AddLine(" ")
     tip:AddLine("|cff69CCF0Reagents:")
 
