@@ -333,6 +333,73 @@ end
 
 -----------------------------------------
 
+function Atr_GetAuctionPeriodPrice (item,period)
+  if (type (item) == "number") then
+    itemName = GetItemInfo (item);
+  else
+    itemName = item;
+  end
+
+  if (itemName == nil) then
+    return nil;
+  end
+
+  if (gAtr_ScanDB and type (gAtr_ScanDB) ~= "table") then
+    zc.msg_badErr ("Scanning history database appears to be corrupt")
+    zc.msg_badErr ("gAtr_ScanDB:", gAtr_ScanDB)
+    return nil
+  end
+
+  if ((type(gAtr_ScanDB) == "table")) then
+    --build history tooltip
+    local todayScanDay = Atr_GetScanDay_Today();
+    local result, count
+
+    -- find in auction data
+    if (gAtr_ScanDB[itemName]) then
+      result = 0
+      count = 0
+      local key, highlowprice, char1, day, when;
+      for key, highlowprice in pairs (gAtr_ScanDB[itemName]) do
+        -- if it's history data
+        char1 = string.sub (key, 1, 1);
+        if (char1 == "H") then
+
+          -- convert to day
+          day = tonumber (string.sub(key, 2));
+          when = gScanHistDayZero + (day *86400);
+
+          -- only get records for past week
+          if day >= todayScanDay - period then
+            -- check if item has multiple prices for this day
+            local lowlowprice = gAtr_ScanDB[itemName]["L"..day];
+            if (lowlowprice == nil) then
+                lowlowprice = highlowprice;
+            end
+            highlowprice = tonumber (highlowprice)
+            lowlowprice  = tonumber (lowlowprice)
+
+            --average the low and high price
+            local dayprice = zc.round ((highlowprice + lowlowprice) / 2);
+            result = result + dayprice
+            count = count + 1
+          end
+        end
+      end
+
+      --average the total
+      if result > 0 then
+        result = result / count
+      end
+      return result
+    end
+  end
+
+  return nil;
+end
+
+-----------------------------------------
+
 local function Atr_CalcTextWid (price)
 
   local wid = 15;
@@ -505,27 +572,31 @@ end
 -----------------------------------------
 
 function Atr_STWP_GetPrices (link, num, itemVendorPrice, itemName, classID, itemRarity, itemLevel)
-
   local vendorPrice = 0;
   local auctionPrice  = 0;
   local dePrice   = nil;
+  local auctionWeekPrice = 0;
+  local auctionMonthPrice = 0;
 
   if (AUCTIONATOR_V_TIPS == 1) then vendorPrice = itemVendorPrice; end;
   if (AUCTIONATOR_A_TIPS == 1) then auctionPrice  = Atr_GetAuctionPrice (itemName); end;
+  if (AUCTIONATOR_A_WEEK_TIPS == 1) then auctionWeekPrice  = Atr_GetAuctionPeriodPrice (itemName,7); end;
+  if (AUCTIONATOR_A_MONTH_TIPS == 1) then auctionMonthPrice  = Atr_GetAuctionPeriodPrice (itemName,30); end;
   if (AUCTIONATOR_D_TIPS == 1) then dePrice   = Atr_CalcDisenchantPrice (classID, itemRarity, itemLevel); end;
 
   if (num) then
     if (auctionPrice) then  auctionPrice = auctionPrice * num;  end;
     if (vendorPrice)  then  vendorPrice  = vendorPrice  * num;  end;
     if (dePrice)      then  dePrice    = dePrice  * num;  end;
+    if (auctionWeekPrice) then  auctionWeekPrice = auctionWeekPrice * num;  end;
+    if (auctionMonthPrice) then  auctionMonthPrice = auctionMonthPrice * num;  end;
   end;
 
   if (vendorPrice == nil) then
     vendorPrice = 0;
   end
 
-  return vendorPrice, auctionPrice, dePrice;
-
+  return vendorPrice, auctionPrice, dePrice, auctionWeekPrice, auctionMonthPrice;
 end
 
 --get item prices without all the params
@@ -566,7 +637,7 @@ function Atr_ShowTipWithPricing (tip, num)
       end
     end
 
-    local vendorPrice, auctionPrice, dePrice = Atr_STWP_GetPrices (itemLink, num, itemVendorPrice, itemName, classID, itemRarity, itemLevel);
+    local vendorPrice, auctionPrice, dePrice, auctionWeekPrice, auctionMonthPrice = Atr_STWP_GetPrices (itemLink, num, itemVendorPrice, itemName, classID, itemRarity, itemLevel);
 
     -- spacing for first render (num is nil)
     if not num then
@@ -578,6 +649,31 @@ function Atr_ShowTipWithPricing (tip, num)
 
     -- auction info
     Atr_STWP_AddAuctionInfo (tip, xstring, itemLink, auctionPrice, true)
+
+    -- auction summary
+    if auctionPrice and auctionWeekPrice ~= nil and AUCTIONATOR_A_WEEK_TIPS == 1 then
+      local left = ZT("Auction").." week"..xstring
+      local right = "|cFFFFFFFF"
+      if auctionWeekPrice > 0 then
+        right = right .. zc.priceToMoneyString(auctionWeekPrice)
+      else
+        right = right .. "No Data"
+      end
+
+      Atr_Tooltip_AddLine(tip,ZT("Auction").." week",left,right, true)
+    end
+
+    if auctionPrice and auctionMonthPrice ~= nil and AUCTIONATOR_A_MONTH_TIPS == 1 then
+      local left = ZT("Auction").." month"..xstring
+      local right = "|cFFFFFFFF"
+      if auctionMonthPrice > 0 then
+        right = right .. zc.priceToMoneyString(auctionMonthPrice)
+      else
+        right = right .. "No Data"
+      end
+
+      Atr_Tooltip_AddLine(tip,ZT("Auction").." month",left,right, true)
+    end
 
     -- disenchanting info
     Atr_STWP_AddBasicDEInfo (tip, xstring, dePrice, true)
