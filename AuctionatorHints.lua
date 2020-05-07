@@ -629,20 +629,18 @@ function Atr_ShowTipWithPricing (tip, num)
     end
 
     if num then
-      if showStackPrices and num > 1 then
+      if showStackPrices and type(num) == "number" and num > 1 then
         xstring = "|cFFAAAAFF x" .. num .. "|r"
       else
-        --dont display stack prices if it's just a single
+        --return from this function without displaying anything, num is bad
         return
       end
+    else
+      -- spacing for first render (num is nil)
+      tip:AddLine(" ")
     end
 
     local vendorPrice, auctionPrice, dePrice, auctionWeekPrice, auctionMonthPrice = Atr_STWP_GetPrices (itemLink, num, itemVendorPrice, itemName, classID, itemRarity, itemLevel);
-
-    -- spacing for first render (num is nil)
-    if not num then
-      tip:AddLine(" ")
-    end
 
     -- vendor info
     Atr_STWP_AddVendorInfo (tip, xstring, vendorPrice, true)
