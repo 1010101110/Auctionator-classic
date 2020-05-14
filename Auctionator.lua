@@ -5052,7 +5052,7 @@ function Atr_Item_Autocomplete(self)
   if AUCTIONATOR_AUTOCOMPLETE == 0 then return end
 
   local text = self:GetText();
-  if text == nil then return end;
+  if type(text) ~= "string" then return end;
 
   local textlen = strlen(text);
   local name;
