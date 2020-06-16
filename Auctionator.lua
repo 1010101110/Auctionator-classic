@@ -5049,34 +5049,26 @@ end
 function Atr_Item_Autocomplete(self)
   Auctionator.Debug.Message( 'Atr_Item_Autocomplete', self )
 
+  --if autocomplete option is disabled then exit
   if AUCTIONATOR_AUTOCOMPLETE == 0 then return end
 
+  --make sure text is valid
   local text = self:GetText();
   if type(text) ~= "string" then return end;
-
   local textlen = strlen(text);
-  local name;
 
   -- first search shopping lists
-
   local numLists = #AUCTIONATOR_SHOPPING_LISTS;
-  local n;
-
   for n = 1,numLists do
     local slist = AUCTIONATOR_SHOPPING_LISTS[n];
-
     local numItems = #slist.items;
 
     if ( numItems > 0 ) then
       for i=1, numItems do
-        name = slist.items[i];
+        local name = slist.items[i];
         if ( name and text and (strfind(strupper(name), strupper(text), 1, 1) == 1) ) then
           self:SetText(name);
-          if ( self:IsInIMECompositionMode() ) then
-            self:HighlightText(textlen - strlen(arg1), -1);
-          else
-            self:HighlightText(textlen, -1);
-          end
+          self:HighlightText(textlen, -1);
           return;
         end
       end
@@ -5084,19 +5076,13 @@ function Atr_Item_Autocomplete(self)
   end
 
   -- next search posted DB
-
-  numItems = #gHistoryItemList;
-
-  if ( numItems > 0 ) then
+  if ( #gHistoryItemList > 0 ) then
+    local numItems = #gHistoryItemList
     for i=1, numItems do
-      name = gHistoryItemList[i].name;
+      local name = gHistoryItemList[i].name;
       if ( name and text and (strfind(strupper(name), strupper(text), 1, 1) == 1) ) then
         self:SetText(name);
-        if ( self:IsInIMECompositionMode() ) then
-          self:HighlightText(textlen - strlen(arg1), -1);
-        else
-          self:HighlightText(textlen, -1);
-        end
+        self:HighlightText(textlen, -1);
         return;
       end
     end
@@ -5217,6 +5203,7 @@ end
 
 function roundPriceDown (price, a)
   Auctionator.Debug.Message( 'roundPriceDown', price, a )
+  Auctionator.Debug.Message('savedvars', AUCTIONATOR_SAVEDVARS)
 
   --if a is not valid for rounding return the price
   if (a == nil or a == 0) then
