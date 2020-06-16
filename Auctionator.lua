@@ -5218,7 +5218,8 @@ end
 function roundPriceDown (price, a)
   Auctionator.Debug.Message( 'roundPriceDown', price, a )
 
-  if (a == 0) then
+  --if a is not valid for rounding return the price
+  if (a == nil or a == 0) then
     return price;
   end
 
