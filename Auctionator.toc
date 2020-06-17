@@ -1,6 +1,6 @@
 ## Interface: 11304
 ## Title: Auctionator |cff00aa00Classicfix
-## Version: 100.0.8
+## Version: 100.0.9
 ## Author: Borjamacare, Zirco, DaMaGepy, 1010101110
 ## X-Website: https://www.curseforge.com/wow/addons/auctionator-classicfix
 ## X-Localizations: enUS, itIT, deDE, ruRU, svSE, frFR, esES, zhTW
