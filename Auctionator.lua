@@ -1997,7 +1997,6 @@ function Atr_OnSearchComplete()
           gCurrentPane.histIndex = 1;
         end
       end
-
     end
 
     if (Atr_IsSelectedTab_Current()) then
@@ -2402,7 +2401,7 @@ function Atr_UpdateRecommendation (updatePrices)
   local basedata;
 
   if (Atr_ShowingSearchSummary()) then
-
+    --useless?
   elseif (Atr_IsSelectedTab_Current()) then
 
     if (gCurrentPane:GetProcessingState() ~= Auctionator.Constants.SearchStates.NULL) then
@@ -2976,7 +2975,6 @@ function Atr_UpdateUI ()
     end
 
     if (Atr_IsModeCreateAuction()) then
-
       Atr_UpdateRecommendation (false);
     else
       Atr_HideElems (recommendElements);
@@ -3397,7 +3395,6 @@ function Atr_ShowingSearchSummary ()
   Auctionator.Debug.Message( 'Atr_ShowingSearchSummary' )
 
   if (gCurrentPane.activeSearch and gCurrentPane.activeSearch.searchText ~= "" and gCurrentPane:IsScanNil() and gCurrentPane.activeSearch:NumScans() > 0) then
-
     return true;
   end
 
@@ -5144,17 +5141,16 @@ end
 
 function Atr_CalcStartPrice (buyoutPrice)
   Auctionator.Debug.Message( 'Atr_CalcStartPrice', buyoutPrice )
+  --default no calculations
+  local ret = buyoutPrice
 
-  local discount = 1.00 - (AUCTIONATOR_SAVEDVARS.STARTING_DISCOUNT / 100);
-
-  local newStartPrice = math.floor(buyoutPrice * discount);
-
-  if (AUCTIONATOR_SAVEDVARS.STARTING_DISCOUNT == 0) then    -- zero means zero
-    newStartPrice = buyoutPrice;
+  -- if we have a starting discount then - starting%
+  if AUCTIONATOR_SAVEDVARS.STARTING_DISCOUNT ~= nil and AUCTIONATOR_SAVEDVARS.STARTING_DISCOUNT > 0) then
+    local discount = 1.00 - (AUCTIONATOR_SAVEDVARS.STARTING_DISCOUNT / 100);
+    ret = math.floor(buyoutPrice * discount);
   end
 
-  return newStartPrice;
-
+  return ret;
 end
 
 -----------------------------------------
@@ -5163,7 +5159,6 @@ function Atr_AbbrevItemName (itemName)
   Auctionator.Debug.Message( 'Atr_AbbrevItemName', itemName )
 
   return string.gsub (itemName, "Scroll of Enchant", "SoE");
-
 end
 
 -----------------------------------------
@@ -5190,8 +5185,6 @@ function Atr_Error_Display (errmsg)
   end
 end
 
-
-
 -----------------------------------------
 -- roundPriceDown - rounds a price down to the next lowest multiple of a.
 --          - if the result is not at least a/2 lower, rounds down by a/2.
@@ -5203,7 +5196,6 @@ end
 
 function roundPriceDown (price, a)
   Auctionator.Debug.Message( 'roundPriceDown', price, a )
-  Auctionator.Debug.Message('savedvars', AUCTIONATOR_SAVEDVARS)
 
   --if a is not valid for rounding return the price
   if (a == nil or a == 0) then
@@ -5221,7 +5213,6 @@ function roundPriceDown (price, a)
   end
 
   return newprice;
-
 end
 
 -----------------------------------------
@@ -5230,7 +5221,6 @@ function ToTightHour(t)
   Auctionator.Debug.Message( 'ToTightHour', t )
 
   return floor((t - gTimeTightZero)/3600);
-
 end
 
 -----------------------------------------
@@ -5239,7 +5229,6 @@ function FromTightHour(tt)
   Auctionator.Debug.Message( 'FromTightHour', tt )
 
   return (tt*3600) + gTimeTightZero;
-
 end
 
 
@@ -5249,7 +5238,6 @@ function ToTightTime(t)
   Auctionator.Debug.Message( 'ToTightTime', t )
 
   return floor((t - gTimeTightZero)/60);
-
 end
 
 -----------------------------------------
@@ -5258,6 +5246,5 @@ function FromTightTime(tt)
   Auctionator.Debug.Message( 'FromTightTime', tt )
 
   return (tt*60) + gTimeTightZero;
-
 end
 
