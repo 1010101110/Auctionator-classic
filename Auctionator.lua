@@ -5145,7 +5145,7 @@ function Atr_CalcStartPrice (buyoutPrice)
   local ret = buyoutPrice
 
   -- if we have a starting discount then - starting%
-  if AUCTIONATOR_SAVEDVARS.STARTING_DISCOUNT ~= nil and AUCTIONATOR_SAVEDVARS.STARTING_DISCOUNT > 0) then
+  if (AUCTIONATOR_SAVEDVARS.STARTING_DISCOUNT ~= nil and AUCTIONATOR_SAVEDVARS.STARTING_DISCOUNT > 0) then
     local discount = 1.00 - (AUCTIONATOR_SAVEDVARS.STARTING_DISCOUNT / 100);
     ret = math.floor(buyoutPrice * discount);
   end
