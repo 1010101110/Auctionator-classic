@@ -1,4 +1,6 @@
-﻿function AtrBuildLTable_zhCN ()
+--枫聖@阿什坎迪
+--上次更新： 2020/06/22
+function AtrBuildLTable_zhCN ()
 
 AtrL = {};
 
@@ -145,7 +147,7 @@ AtrL["Waiting for auction data"] = "等待拍卖数据"
 AtrL["Updating database"] = "更新数据库"
 --AtrL["Scan complete"] = ""
 AtrL["Analyzing data"] = "分析数据"
-AtrL["out of"] = ""
+AtrL["out of"] = " 个 共 "
 AtrL["Page %s of %s"] = "扫描 %d 共 %d"
 AtrL["FULL SCAN:"] = "扫描："
 AtrL["Full Scan"] = "扫描"
