@@ -64,7 +64,7 @@
         <FontStringHeader1 inherits="GameFontNormal"/>
       </SimpleHTML>
 
-      <Frame name="Atr_FullScanResults" hidden="true">
+      <Frame name="Atr_FullScanResults" hidden="true" inherits="BackdropTemplate">
         <Anchors>
           <Anchor point="TOPLEFT"><Offset><AbsDimension y="-195" x="70"/></Offset></Anchor>
           <Anchor point="BOTTOMRIGHT"><Offset><AbsDimension y="30" x="-70"/></Offset></Anchor>
@@ -73,6 +73,15 @@
         <Backdrop edgeFile="Interface\Tooltips\UI-Tooltip-Border">
           <EdgeSize><AbsValue val="16"/></EdgeSize>
         </Backdrop>
+
+    	<Scripts>
+          <OnShow>
+            self:SetBackdrop({
+              edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border", 
+              edgeSize = 16,
+            })
+          </OnShow>
+        </Scripts>
 
         <Layers>
           <Layer level="ARTWORK">
