@@ -258,7 +258,7 @@
               </Anchor>
             </Anchors>
             <Scripts>
-              <OnLoad>_G[self:GetName().."Text"]:SetFormattedText(FORMATED_HOURS, 2); </OnLoad>
+              <OnLoad>_G[self:GetName().."Text"]:SetFormattedText(FORMATED_HOURS, 12); </OnLoad>
               <OnClick>Atr_SetDurationOptionRB (self:GetName()); </OnClick>
             </Scripts>
           </CheckButton>
@@ -271,7 +271,7 @@
               </Anchor>
             </Anchors>
             <Scripts>
-              <OnLoad>_G[self:GetName().."Text"]:SetFormattedText(FORMATED_HOURS, 8); </OnLoad>
+              <OnLoad>_G[self:GetName().."Text"]:SetFormattedText(FORMATED_HOURS, 23); </OnLoad>
               <OnClick>Atr_SetDurationOptionRB (self:GetName()); </OnClick>
             </Scripts>
           </CheckButton>
@@ -284,7 +284,7 @@
               </Anchor>
             </Anchors>
             <Scripts>
-              <OnLoad>_G[self:GetName().."Text"]:SetFormattedText(FORMATED_HOURS, 24); </OnLoad>
+              <OnLoad>_G[self:GetName().."Text"]:SetFormattedText(FORMATED_HOURS, 48); </OnLoad>
               <OnClick>Atr_SetDurationOptionRB (self:GetName()); </OnClick>
             </Scripts>
           </CheckButton>
