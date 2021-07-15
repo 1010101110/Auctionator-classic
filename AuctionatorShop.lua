@@ -775,7 +775,7 @@ function Atr_ShpList_SetToRecents()
   gCurrentSList = AUCTIONATOR_SHOPPING_LISTS[1]
 
   UIDropDownMenu_SetSelectedValue(Atr_DropDownSL, 1);
-  UIDropDownMenu_SetText (Atr_DropDownSL, gCurrentSList.name);  -- needed to fix bug in UIDropDownMenu
+  UIDropDownMenu_SetText (Atr_DropDownSL, gCurrentSList and gCurrentSList.name or '');  -- needed to fix bug in UIDropDownMenu
 
 end
 
