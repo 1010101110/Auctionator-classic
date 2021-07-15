@@ -81,7 +81,7 @@ hooksecurefunc (GameTooltip, "SetTradeSkillItem",
 hooksecurefunc( GameTooltip, 'SetCraftItem',
   function( tip, craftspellindex, reagentindex )
     --this blizzard api doesn't set item correctly so we have to do it manually
-    local ilink = GetCraftReagentItemLink(craftspellindex,reagentindex)
+    local ilink = GetCraftReagentItemLink(craftspellindex,reagentindex,true)
     local iid = GetItemInfoInstant(ilink)
     tip:SetItemByID(iid)
   end
@@ -703,20 +703,20 @@ function Atr_ShowReagentTooltip(tip, craftType, index, reagent)
 
     if craftType == "craft" then
       --loop through craft reagents
-      local nr = GetCraftNumReagents(index);
+      local nr = GetCraftNumReagents(index,true);
       for i = 1,nr  do
         --get the reagent info
-        local rname, _, rreq = GetCraftReagentInfo(index,i)
-        local rlink = GetCraftReagentItemLink(index,i)
+        local rname, _, rreq = GetCraftReagentInfo(index,i,true)
+        local rlink = GetCraftReagentItemLink(index,i,true)
         ReagentLine(tip,rlink,rname,rreq)
         tip:AddLine(" ")
       end
     elseif craftType == "trade" then
       --the items reagents
-      local nr = GetTradeSkillNumReagents(index)
+      local nr = GetTradeSkillNumReagents(index,true)
       for i=1,nr do
-        local rlink = GetTradeSkillReagentItemLink(index,i)
-        local rname, _, rreq = GetTradeSkillReagentInfo(index,i)
+        local rlink = GetTradeSkillReagentItemLink(index,i,true)
+        local rname, _, rreq = GetTradeSkillReagentInfo(index,i,true)
 
         ReagentLine(tip,rlink,rname,rreq)
         tip:AddLine(" ")
