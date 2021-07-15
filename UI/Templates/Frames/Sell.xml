@@ -218,7 +218,7 @@
             <Texture file="Interface\Tooltips\UI-Tooltip-Border">
               <Size><AbsDimension x="5"/></Size>
               <Anchors>
-                <Anchor point="TOPLEFT"><Offset><AbsDimension x="174" y="0"/></Offset></Anchor>
+                <Anchor point="TOPLEFT"><Offset><AbsDimension x="170" y="0"/></Offset></Anchor>
                 <Anchor point="BOTTOM"><Offset><AbsDimension y="0"/></Offset></Anchor>
               </Anchors>
               <TexCoords left="0.15" right="0.25" top="0" bottom="1"/>
@@ -234,7 +234,7 @@
           <Layer level="ARTWORK">
 
             <FontString inherits="GameFontHighlightSmall" text="CREATE_AUCTION">
-              <Anchors><Anchor point="TOPLEFT"><Offset><AbsDimension x="83" y="18"/></Offset></Anchor></Anchors>
+              <Anchors><Anchor point="TOPLEFT"><Offset><AbsDimension x="68" y="18"/></Offset></Anchor></Anchors>
             </FontString>
 
             <FontString name="Atr_StackPriceText" inherits="GameFontHighlightSmall" text="Buyout Price">
@@ -266,7 +266,7 @@
               <Anchors><Anchor point="TOPLEFT"><Offset><AbsDimension x="10" y="-270"/></Offset></Anchor></Anchors>
             </FontString>
 
-            <FontString name="Atr_Duration_Text" inherits="GameFontHighlightSmall" text="AUCTION_DURATION">
+            <FontString name="Atr_Duration_Text" inherits="GameFontHighlightSmall" text="Duration">
               <Anchors><Anchor point="TOPLEFT"><Offset><AbsDimension x="10" y="-304"/></Offset></Anchor></Anchors>
             </FontString>
 
